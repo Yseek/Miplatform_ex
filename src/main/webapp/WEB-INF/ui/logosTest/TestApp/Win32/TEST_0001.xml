@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window>
+	<Form Height="543" Id="form" Left="8" PidAttrib="7" Title="New&#32;Form" Top="8" Ver="1.0" Width="800" WorkArea="true">
+		<Datasets>
+			<Dataset DataSetType="Dataset" Id="ds_sawon">
+				<Contents>
+					<colinfo id="sabun" size="256" summ="default" type="STRING"/>
+					<colinfo id="name" size="256" summ="default" type="STRING"/>
+					<colinfo id="dept" size="256" summ="default" type="STRING"/>
+				</Contents>
+			</Dataset>
+		</Datasets>
+		<Static Align="Center" BKColor="SCROLLBAR" Font="Tahoma,14,Bold" Height="24" Id="Static0" Left="24" TabOrder="1" Text="사원관리" Top="21" VAlign="Middle" Width="187"></Static>
+		<Button Appearance="FLAT" Height="35" Id="Button0" Left="403" OnClick="Button0_OnClick" TabOrder="2" Text="조회" Top="21" Width="83"></Button>
+		<Button Appearance="FLAT" Height="35" Id="Button1" Left="491" OnClick="Button1_OnClick" TabOrder="3" Text="입력" Top="21" Width="83"></Button>
+		<Button Appearance="FLAT" Height="35" Id="Button2" Left="580" OnClick="Button2_OnClick" TabOrder="4" Text="삭제" Top="21" Width="83"></Button>
+		<Button Appearance="FLAT" Height="35" Id="Button3" Left="668" OnClick="Button3_OnClick" TabOrder="5" Text="저장" Top="21" Width="83"></Button>
+		<Div Height="40" Id="Div0" Left="216" TabOrder="6" Text="Div0" Top="21" Width="178">
+			<Contents>
+				<Static BKColor="SCROLLBAR" Font="Tahoma,11,Bold" Height="39" Id="Static1" Left="16" TabOrder="1" Text="성명" VAlign="Middle" Width="166"></Static>
+				<Edit Height="27" Id="Edit0" Left="48" TabOrder="2" Top="5" Width="126"></Edit>
+			</Contents>
+		</Div>
+		<Grid AutoEnter="TRUE" AutoFit="TRUE" BindDataset="ds_sawon" BoldHead="true" Bottom="271" Editable="TRUE" Enable="true" EndLineColor="default" Height="199" Id="Grid0" InputPanel="FALSE" Left="25" LineColor="default" MinWidth="100" Right="752" TabOrder="7" TabStop="true" Top="72" UseDBuff="true" UsePopupMenu="true" UseSelColor="true" Visible="true" VLineColor="default" WheelScrollRow="1" Width="727">
+			<contents>
+				<format id="Default">
+					<columns>
+						<col width="42"/>
+						<col width="200"/>
+						<col width="200"/>
+						<col width="200"/>
+					</columns>
+					<head>
+						<cell col="0" display="text" text="NO"/>
+						<cell col="1" display="text" text="사번"/>
+						<cell col="2" display="text" text="이름"/>
+						<cell col="3" display="text" text="부서"/>
+					</head>
+					<body>
+						<cell align="center" celltype="head" col="0" display="text" expr="currow+1"/>
+						<cell col="1" colid="sabun" display="text" edit="normal" Mask="AA-###"/>
+						<cell col="2" colid="name" display="text" edit="normal"/>
+						<cell col="3" colid="dept" display="text" edit="normal"/>
+					</body>
+				</format>
+			</contents>
+		</Grid>
+	</Form>
+	<Script><![CDATA[
+function Button0_OnClick(obj)
+{
+	Transaction("조회" ,"SvcJsp::search", "", "ds_sawon=js_sawon", "searchVal=검색하는 변수", "callback");
+}
+
+function Button1_OnClick(obj)
+{
+	ds_sawon.AddRow();
+}
+
+function Button2_OnClick(obj)
+{
+	ds_sawon.DeleteRow(ds_sawon.row);
+}
+
+function Button3_OnClick(obj)
+{
+	Transaction("저장" ,"SvcJsp::save", "input=ds_sawon:u", "out_ds=output", "in_val=보내는변수", "callback");
+}
+
+var out_var;
+function callback(trid, ErrorCode, ErrorMsg)
+{
+	if(trid == "조회")
+	{
+		if( ErrorCode < 0){
+			alert("조회 실패 : "+ ErrorMsg);
+		}
+		else{
+			alert("조회 성공");
+		}
+	}
+	
+	if(trid == "저장")
+	{
+		if( ErrorCode < 0){
+			alert("저장 실패 : "+ ErrorMsg);
+		}
+		else{
+			alert("저장 성공!! " + "out_var = "+ out_var);
+		}
+	}
+	
+	
+}]]></Script>
+</Window>
